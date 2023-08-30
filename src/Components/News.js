@@ -7,30 +7,28 @@ export default class News extends Component {
   static defaultProps = {
     country: "in",
     pageSize: 8,
-    category:"general"
+    category: "general",
+    page: 1,
   };
   static propTypes = {
     country: PropTypes.string,
     pageSize: PropTypes.number,
     category: PropTypes.string,
+    page: PropTypes.number,
   };
 
-  constructor() {
-    super();
-
+  constructor(props) {
+    super(props);
     console.log("I'm constructor of news");
-    // document.body.style.backgroundColor = "black"
-
     this.state = {
       articles: [],
       loading: false,
       page: 1,
     };
+    document.title = `${this.capitalize(this.props.category)} - NewsFire`;
   }
-
-  async componentDidMount() {
-    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=d3f7c08c160942f88e1bf11ac589e21d&page=${this.state.page}&pageSize=${this.props.pageSize}`;
-
+  async updateNews() {
+    const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=d3f7c08c160942f88e1bf11ac589e21d&page=${this.state.page}&pageSize=${this.props.pageSize}`;
     this.setState({ loading: true });
     let data = await fetch(url);
     let parsedData = await data.json();
@@ -40,41 +38,21 @@ export default class News extends Component {
       loading: false,
     });
   }
-  previousPage = async () => {
-    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=d3f7c08c160942f88e1bf11ac589e21d&page=${this.state.page-1}&pageSize=${this.props.pageSize}`;
 
-    this.setState({ loading: true });
-    let data = await fetch(url);
-    let parsedData = await data.json();
-    this.setState({
-      page: this.state.page - 1,
-      articles: parsedData.articles,
-      loading: false,
-    });
-  };
-  nextPage = async () => {
-    if (this.state.page + 1 >Math.ceil(this.state.totalResults / this.props.pageSize)){
-    } else {
-      let url = `https://newsapi.org/v2/top-headlines?country=${
-        this.props.country
-      }&category=${this.props.category}&apiKey=d3f7c08c160942f88e1bf11ac589e21d&page=${
-        this.state.page + 1
-      }&pageSize=${this.props.pageSize}`;
-      this.setState({ loading: true });
-      let data = await fetch(url);
-      let parsedData = await data.json();
-      this.setState({
-        page: this.state.page + 1,
-        articles: parsedData.articles,
-        loading: false,
-      });
-    }
+  async componentDidMount() {
+    this.updateNews();
+  }
+  capitalize = (word) => {
+    const lower = word.toLowerCase();
+    return lower.charAt(0).toUpperCase() + lower.slice(1);
   };
 
   render() {
     return (
       <div className="container">
-        <h1 className="text-center my-2">News Fire! - Daily News</h1>
+        <h1 className="text-center my-2">
+          News Fire! - Top {this.capitalize(this.props.category)} Headlines
+        </h1>
         {this.state.loading && <Spinner />}
         <div className="row">
           {!this.state.loading &&
@@ -90,9 +68,9 @@ export default class News extends Component {
                         : e.urlToImage
                     }
                     newsUrl={e.url}
-                    author = {e.author}
-                    date = {e.publishedAt}
-                    source = {e.source.name}
+                    author={e.author}
+                    date={e.publishedAt}
+                    source={e.source.name}
                   />
                 </div>
               );
@@ -102,15 +80,28 @@ export default class News extends Component {
           <button
             disabled={this.state.page <= 1}
             type="button"
-            onClick={this.previousPage}
+            onClick={
+              (this.previousPage = () => {
+                this.setState({ page: this.state.page - 1 });
+                this.updateNews();
+              })
+            }
             className="btn btn-dark"
           >
             &larr; Previous
           </button>
           <button
-            disabled={this.state.page + 1 > Math.ceil(this.state.totalResults / this.props.pageSize)}
+            disabled={
+              this.state.page + 1 >
+              Math.ceil(this.state.totalResults / this.props.pageSize)
+            }
             type="button"
-            onClick={this.nextPage}
+            onClick={
+              (this.nextPage = () => {
+                this.setState({ page: this.state.page + 1 });
+                this.updateNews();
+              })
+            }
             className="btn btn-dark"
           >
             Next &rarr;
