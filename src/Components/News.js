@@ -15,14 +15,14 @@ const News = (props)=>{
     const [totalResults, setTotalResults] = useState(0);
 
     const updateNews= async() => {
-        setProgress(10);
+        setProgress(15);
         const url = `https://newsapi.org/v2/top-headlines?country=${country}&category=${category}&apiKey=${apiKey}&page=${page}&pageSize=${pageSize}`;
         setLoading(true);
         let data = await fetch(url);
         setProgress(30);
         let parsedData = await data.json()
-        setProgress(60);
-        setArticles(articles.concat(parsedData.articles));
+        setProgress(70);
+        setArticles(parsedData.articles);
         setTotalResults(parsedData.totalResults);
         setLoading(false);
         setProgress(100);
@@ -35,6 +35,7 @@ const News = (props)=>{
         let parsedData = await data.json()
         setArticles(articles.concat(parsedData.articles));
         setTotalResults(parsedData.totalResults);
+        setLoading(false);
     };
 
     useEffect(()=>{
@@ -44,7 +45,7 @@ const News = (props)=>{
     }, [])
     return (
         <>
-            <h1 className="text-center my-3">NewsFire! - Top {capitalize(category)} Headlines</h1>
+            <h1 style={{marginTop:'70px'}} className="text-center">NewsFire! - Top {capitalize(category)} Headlines</h1>
             {loading && <Spinner />}
             <InfiniteScroll
                 dataLength={articles.length}
@@ -56,7 +57,7 @@ const News = (props)=>{
                 <div className="row">
                     {articles.map((e) => {
                         return <div className="col-md-3" key={e.url}>
-                            <NewsItem title={e.title} desc={e.desc} imgUrl={e.urlToImage} newsUrl={e.url} author={e.author} date={e.publishedAt} source={e.source.name} />
+                            <NewsItem title={e.title} description={e.description} imgUrl={e.urlToImage} newsUrl={e.url} author={e.author} date={e.publishedAt} source={e.source.name} />
                         </div>
                     })}
                 </div>
