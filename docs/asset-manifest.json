@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/newsfire/static/css/main.99e4cf39.css",
+    "main.js": "/newsfire/static/js/main.5750e970.js",
+    "index.html": "/newsfire/index.html",
+    "main.99e4cf39.css.map": "/newsfire/static/css/main.99e4cf39.css.map",
+    "main.5750e970.js.map": "/newsfire/static/js/main.5750e970.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.99e4cf39.css",
+    "static/js/main.5750e970.js"
+  ]
+}
