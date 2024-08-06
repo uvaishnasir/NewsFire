@@ -2,13 +2,12 @@ import React, { useState } from "react";
 import Navbar from "./Components/Navbar";
 import News from "./Components/News";
 import LoadingBar from 'react-top-loading-bar'
-import { BrowserRouter as Router, Routes, Route, HashRouter} from "react-router-dom";
+import {Routes, Route, HashRouter} from "react-router-dom";
 const App = ()=>{
   let pageSize = 8;
   let apiKey = process.env.REACT_APP_NEWS_API;
   const [progress, setProgress] = useState(0);
   return (
-      <Router>
       <HashRouter basename="/">
         <Navbar />
         <LoadingBar color='#f11946' height={3} progress={progress}/>
@@ -23,7 +22,6 @@ const App = ()=>{
           <Route exact path="/technology" element={<News setProgress = {setProgress}apiKey = {apiKey} key="technology" country="in" pageSize={pageSize} category="technology" />}/>
         </Routes>
         </HashRouter>
-      </Router>
   );
 }
 export default App;
