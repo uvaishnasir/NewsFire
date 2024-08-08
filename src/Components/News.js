@@ -48,7 +48,7 @@ const News = (props)=>{
             <h1 style={{marginTop:'70px'}} className="text-center">NewsFire! - Top {capitalize(category)} Headlines</h1>
             {loading && <Spinner />}
             <InfiniteScroll
-                dataLength={articles.length}
+                dataLength={articles.length || 0}  //for undefined length
                 next={fetchMoreData}
                 hasMore={articles.length !== totalResults}
                 loader={<Spinner/>}
